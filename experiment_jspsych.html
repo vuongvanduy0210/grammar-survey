@@ -1,0 +1,916 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Grammatical Judgement Survey</title>
+
+<!-- jsPsych v8 + plugins -->
+<script src="https://unpkg.com/jspsych@8.0.2"></script>
+<script src="https://unpkg.com/@jspsych/plugin-html-keyboard-response@2.0.0"></script>
+<script src="https://unpkg.com/@jspsych/plugin-html-button-response@2.0.0"></script>
+<script src="https://unpkg.com/@jspsych/plugin-survey-text@2.0.0"></script>
+<script src="https://unpkg.com/@jspsych-contrib/plugin-pipe@0.5"></script>
+<link rel="stylesheet" href="https://unpkg.com/jspsych@8.0.2/css/jspsych.css">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+<style>
+*, *::before, *::after { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; width: 100%; min-height: 100%; overflow-x: hidden; -webkit-text-size-adjust: 100%; }
+body { background: linear-gradient(160deg, #f0f4ff 0%, #e8ecf8 40%, #f5f0ff 100%); background-attachment: fixed; font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; color: #1e1b4b; }
+.jspsych-display-element { font-family: 'Inter', sans-serif !important; width: 100% !important; max-width: 100vw !important; overflow-x: hidden !important; }
+.jspsych-content-wrapper { width: 100% !important; max-width: 100vw !important; padding: 40px 20px 50px !important; }
+.jspsych-content { max-width: 920px !important; margin: 0 auto !important; width: 100% !important; }
+.step-progress { display: flex; justify-content: center; align-items: center; max-width: 600px; margin: 0 auto 36px; padding: 0; }
+.step-progress .step-col { display: flex; flex-direction: column; align-items: center; min-width: 60px; }
+.step-progress .step-circle { width: 38px; height: 38px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 700; flex-shrink: 0; transition: all 0.3s ease; }
+.step-progress .step-circle.done { background: linear-gradient(135deg, #6366f1, #8b5cf6); color: white; }
+.step-progress .step-circle.active { background: white; color: #6366f1; border: 3px solid #6366f1; box-shadow: 0 0 0 4px rgba(99,102,241,0.15); }
+.step-progress .step-circle.upcoming { background: #e2e8f0; color: #94a3b8; }
+.step-progress .step-label { font-size: 11px; font-weight: 600; color: #6b7280; margin-top: 6px; white-space: nowrap; }
+.step-progress .step-line { width: 40px; height: 3px; border-radius: 3px; flex-shrink: 0; margin: 0 4px 18px; }
+.step-progress .step-line.done { background: linear-gradient(90deg, #6366f1, #8b5cf6); }
+.step-progress .step-line.upcoming { background: #e2e8f0; }
+.survey-card { background: white; border-radius: 20px; box-shadow: 0 4px 30px rgba(0,0,0,0.06), 0 1px 3px rgba(0,0,0,0.03); padding: 48px 52px; max-width: 850px; margin: 0 auto 32px; border: 1px solid rgba(99,102,241,0.08); text-align: left; }
+.survey-card h2 { font-size: 26px; font-weight: 700; color: #1e1b4b; text-align: center; margin-bottom: 28px; letter-spacing: -0.5px; }
+.survey-card p { font-size: 15px; line-height: 1.8; color: #374151; margin-bottom: 16px; }
+.survey-card b, .survey-card strong { color: #1e1b4b; font-weight: 600; }
+.survey-card ul { padding-left: 24px; }
+.survey-card li { font-size: 15px; line-height: 1.8; color: #374151; margin-bottom: 6px; }
+.section-header { text-align: center; padding: 52px 44px; background: white; border-radius: 20px; box-shadow: 0 4px 30px rgba(0,0,0,0.06); max-width: 750px; margin: 0 auto 32px; border: 1px solid rgba(99,102,241,0.08); }
+.section-header h1 { font-size: 30px; font-weight: 800; background: linear-gradient(135deg, #4f46e5, #7c3aed); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; margin-bottom: 16px; letter-spacing: -0.5px; }
+.section-header p { font-size: 16px; color: #374151; line-height: 1.8; margin-bottom: 8px; }
+.section-header .note { display: inline-block; background: linear-gradient(135deg, #fef3c7, #fde68a); color: #92400e; padding: 10px 24px; border-radius: 10px; font-weight: 600; font-size: 15px; margin-top: 16px; }
+.section-header .scale-legend { background: #f8fafc; border: 1px solid rgba(99,102,241,0.12); border-radius: 14px; padding: 20px 28px; margin: 20px auto 16px; max-width: 480px; text-align: left; }
+.section-header .scale-legend p { font-size: 14px; color: #374151; margin-bottom: 6px; line-height: 1.6; }
+.question-card { background: white; border-radius: 16px; box-shadow: 0 2px 16px rgba(0,0,0,0.05); padding: 40px 44px; max-width: 800px; margin: 0 auto 24px; border: 1px solid rgba(99,102,241,0.08); text-align: center; }
+.question-card .q-label { font-size: 19px; color: #1e1b4b; font-weight: 600; display: block; margin-bottom: 8px; }
+.question-card .q-hint { color: #9ca3af; font-size: 14px; }
+.ielts-card { text-align: center; background: white; border-radius: 16px; box-shadow: 0 2px 16px rgba(0,0,0,0.05); padding: 40px 44px; max-width: 600px; margin: 0 auto 24px; border: 1px solid rgba(99,102,241,0.08); }
+.ielts-card h3 { font-size: 22px; font-weight: 700; color: #1e1b4b; margin-bottom: 24px; }
+.practice-done-card, .ending-card { text-align: center; background: white; border-radius: 20px; box-shadow: 0 4px 30px rgba(0,0,0,0.06); padding: 52px; max-width: 750px; margin: 0 auto 32px; border: 1px solid rgba(99,102,241,0.08); }
+.practice-done-card .emoji-big, .ending-card .emoji-big { font-size: 56px; display: block; margin-bottom: 20px; }
+.practice-done-card h2, .ending-card h1 { font-size: 28px; font-weight: 800; background: linear-gradient(135deg, #4f46e5, #7c3aed); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; margin-bottom: 24px; }
+.practice-done-card p, .ending-card p { font-size: 16px; color: #4b5563; line-height: 1.8; margin-bottom: 14px; }
+.sentence-display { font-size: 24px; font-family: 'Georgia', serif; color: #1e1b4b; text-align: center; padding: 36px 44px; background: linear-gradient(135deg, #f8fafc, #eef2ff); border-radius: 16px; margin: 16px auto 32px; max-width: 800px; border: 1px solid rgba(99,102,241,0.1); line-height: 1.6; }
+.timer-badge { display: inline-block; background: linear-gradient(135deg, #fee2e2, #fecaca); color: #dc2626; padding: 10px 28px; border-radius: 50px; font-weight: 700; font-size: 15px; letter-spacing: 0.3px; border: 1px solid rgba(220,38,38,0.15); margin-bottom: 12px; }
+.practice-badge { display: inline-block; background: linear-gradient(135deg, #d1fae5, #a7f3d0); color: #065f46; padding: 10px 28px; border-radius: 50px; font-weight: 700; font-size: 15px; letter-spacing: 0.3px; border: 1px solid rgba(6,95,70,0.15); margin-bottom: 12px; }
+.error-msg { display: inline-block; background: #fef2f2; color: #dc2626; padding: 10px 24px; border-radius: 10px; font-weight: 500; font-size: 14px; border: 1px solid rgba(220,38,38,0.15); margin: 12px auto; }
+.rating-scale { display: flex; flex-direction: column; align-items: center; width: 100%; max-width: 720px; margin: 0 auto 28px; }
+.rating-scale .scale-anchor { font-size: 14px; color: #6b7280; margin: 8px 0; }
+.rating-scale .scale-row { display: flex; justify-content: center; gap: 12px; width: 100%; flex-wrap: wrap; padding: 0 8px; }
+.rating-scale .scale-option { display: flex; flex-direction: column; align-items: center; cursor: pointer; padding: 6px 10px; border-radius: 12px; transition: background 0.15s; }
+.rating-scale .scale-option:hover { background: rgba(99,102,241,0.06); }
+.rating-scale .scale-option .num { font-size: 18px; font-weight: 600; color: #1e1b4b; margin-bottom: 6px; }
+.rating-scale .scale-option input[type="radio"] { width: 22px; height: 22px; accent-color: #6366f1; cursor: pointer; margin: 0; }
+.rating-scale .scale-option.selected { background: rgba(99,102,241,0.1); }
+.consent-choice { display: flex; flex-direction: column; align-items: flex-start; gap: 10px; margin: 15px auto; max-width: 350px; font-size: 15px; }
+.consent-choice label { display: flex; align-items: center; gap: 10px; cursor: pointer; }
+.consent-choice input[type="radio"] { width: 20px; height: 20px; accent-color: #6366f1; }
+.ielts-options { display: flex; justify-content: center; gap: 16px; flex-wrap: wrap; margin: 16px auto 24px; }
+.ielts-options label { display: flex; align-items: center; gap: 8px; padding: 10px 18px; background: #f8fafc; border-radius: 10px; cursor: pointer; font-weight: 600; font-size: 15px; border: 1px solid rgba(99,102,241,0.12); transition: background 0.15s, border-color 0.15s; }
+.ielts-options label:hover { background: #eef2ff; border-color: #6366f1; }
+.ielts-options input[type="radio"] { width: 18px; height: 18px; accent-color: #6366f1; }
+.jspsych-btn, button.app-btn { background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%) !important; color: white !important; border: none !important; border-radius: 12px !important; padding: 14px 44px !important; font-size: 16px !important; font-weight: 600 !important; font-family: 'Inter', sans-serif !important; cursor: pointer !important; transition: all 0.3s cubic-bezier(0.4,0,0.2,1) !important; box-shadow: 0 4px 15px rgba(99,102,241,0.25) !important; letter-spacing: 0.3px !important; margin: 8px 6px !important; }
+.jspsych-btn:hover, button.app-btn:hover { transform: translateY(-2px) !important; box-shadow: 0 8px 25px rgba(99,102,241,0.35) !important; }
+.jspsych-btn:disabled, button.app-btn:disabled { opacity: 0.5 !important; cursor: not-allowed !important; transform: none !important; }
+input[type="text"], textarea, .jspsych-survey-text-question input { border: 2px solid #e2e8f0 !important; border-radius: 12px !important; padding: 14px 20px !important; font-size: 16px !important; font-family: 'Inter', sans-serif !important; outline: none !important; background: #fafafa !important; color: #1e1b4b !important; width: 100% !important; max-width: 600px !important; }
+input[type="text"]:focus, textarea:focus, .jspsych-survey-text-question input:focus { border-color: #6366f1 !important; box-shadow: 0 0 0 4px rgba(99,102,241,0.1) !important; background: white !important; }
+
+@media (max-width: 768px) {
+  body { font-size: 14px; }
+  .jspsych-content-wrapper { padding: 16px 12px 28px !important; }
+  .jspsych-content { max-width: 100% !important; }
+  .step-progress { max-width: 100%; gap: 4px; }
+  .step-progress .step-col { min-width: 0; flex: 0 0 auto; }
+  .step-progress .step-circle { width: 30px; height: 30px; font-size: 12px; }
+  .step-progress .step-label { font-size: 10px; margin-top: 4px; }
+  .step-progress .step-line { width: clamp(12px, 5vw, 24px); margin-bottom: 16px; }
+  .survey-card, .section-header, .question-card, .practice-done-card, .ending-card, .ielts-card { padding: 22px 16px; margin: 0 auto 20px; max-width: 100%; border-radius: 14px; }
+  .survey-card h2 { font-size: 19px; margin-bottom: 16px; }
+  .survey-card p, .survey-card li { font-size: 14px; line-height: 1.6; }
+  .section-header h1, .ending-card h1, .practice-done-card h2 { font-size: 21px; line-height: 1.3; }
+  .section-header p, .ending-card p, .practice-done-card p { font-size: 14px; line-height: 1.6; }
+  .section-header .scale-legend { padding: 14px; max-width: 100%; }
+  .section-header .scale-legend p { font-size: 13px; }
+  .ielts-card h3 { font-size: 18px; }
+  .question-card .q-label { font-size: 16px; }
+  .question-card .q-hint { font-size: 12px; }
+  .sentence-display { font-size: 17px; padding: 20px 14px; margin: 12px auto 20px; max-width: 100%; }
+  .rating-scale { max-width: 100%; }
+  .rating-scale .scale-row { gap: 6px; padding: 0; }
+  .rating-scale .scale-option { padding: 4px 6px; }
+  .rating-scale .scale-option .num { font-size: 15px; margin-bottom: 4px; }
+  .rating-scale .scale-option input[type="radio"] { width: 20px; height: 20px; }
+  .timer-badge, .practice-badge { font-size: 13px; padding: 8px 16px; }
+  .jspsych-btn, button.app-btn { padding: 12px 26px !important; font-size: 15px !important; min-height: 44px !important; }
+}
+@media (max-width: 480px) {
+  .step-progress .step-label { display: none; }
+  .step-progress .step-circle { width: 26px; height: 26px; font-size: 11px; }
+  .step-progress .step-line { width: 14px; margin-bottom: 0; }
+  .survey-card, .section-header, .question-card, .practice-done-card, .ending-card, .ielts-card { padding: 18px 12px; }
+  .survey-card h2 { font-size: 18px; }
+  .section-header h1, .ending-card h1, .practice-done-card h2 { font-size: 19px; }
+  .practice-done-card .emoji-big, .ending-card .emoji-big { font-size: 42px; }
+  .sentence-display { font-size: 16px; padding: 16px 12px; }
+  .rating-scale .scale-row { gap: 4px; }
+  .rating-scale .scale-option { padding: 3px 4px; }
+  .rating-scale .scale-option .num { font-size: 14px; }
+  .rating-scale .scale-option input[type="radio"] { width: 18px; height: 18px; }
+  .jspsych-btn, button.app-btn { padding: 11px 20px !important; font-size: 14px !important; }
+}
+</style>
+</head>
+<body></body>
+
+<script>
+/* ╔══════════════════════════════════════════════════════════════════════════╗
+   ║                                                                          ║
+   ║   📝 PHẦN NỘI DUNG — CHỈNH SỬA TẠI ĐÂY                                    ║
+   ║                                                                          ║
+   ║   Tất cả nội dung text, câu hỏi, sentences đều ở phần này.               ║
+   ║   Bạn KHÔNG cần chỉnh phần code logic ở dưới.                            ║
+   ║                                                                          ║
+   ║   Lưu ý:                                                                 ║
+   ║   - Dấu " " quanh text rất quan trọng, đừng xóa                          ║
+   ║   - Mỗi item kết thúc bằng dấu phẩy (,) trừ item cuối                    ║
+   ║   - Nếu text có dấu " bên trong, viết \" để escape                       ║
+   ║   - HTML tags <b>, <p>, <br>, <ul>, <li> dùng được trong text            ║
+   ║                                                                          ║
+   ╚══════════════════════════════════════════════════════════════════════════╝ */
+
+
+// ──────────────────────────────────────────────────────────────────────────
+// 💾 LƯU DỮ LIỆU (DataPipe)
+// ──────────────────────────────────────────────────────────────────────────
+//
+// Sau khi setup DataPipe (xem HUONG_DAN.md), paste experiment ID vào đây.
+// Ví dụ: const DATAPIPE_EXPERIMENT_ID = "abc123xyz";
+//
+// Nếu để trống "", data sẽ được tải về máy participant (chỉ dùng để test local).
+const DATAPIPE_EXPERIMENT_ID = "";
+
+
+// ──────────────────────────────────────────────────────────────────────────
+// ⏱️  CÀI ĐẶT TIMING & GATING
+// ──────────────────────────────────────────────────────────────────────────
+
+// Thời gian mỗi câu phán đoán (giây) — đổi 10 thành số khác nếu muốn
+const TIMER_SECONDS = 10;
+
+// Điểm IELTS bị loại (người chọn các điểm này sẽ thấy "thank you" rồi kết thúc)
+const IELTS_REJECT_SCORES = ["6.0", "6.5"];
+
+// Các điểm IELTS hiển thị cho người tham gia chọn
+const IELTS_SCORE_OPTIONS = ["6.0", "6.5", "7.0", "7.5"];
+
+
+// ──────────────────────────────────────────────────────────────────────────
+// 📋 TRANG 1: CONSENT (consent form đầu tiên)
+// ──────────────────────────────────────────────────────────────────────────
+
+const CONSENT_HTML = `
+  <div class="survey-card">
+    <h2>Welcome to Our Grammatical Judgement Survey!</h2>
+
+    <p>We are a group of young researchers who graduated from the <b>English Language Studies program at Hanoi University</b>. This survey is part of our ongoing research project on English grammar comprehension among advanced Vietnamese learners.</p>
+
+    <p><b>Purpose of the survey:</b><br>
+    The aim of this test is to explore how advanced English learners perceive and judge some common English grammatical structures.</p>
+
+    <p><b>About the task:</b><br>
+    By enrolling in this test, you will be asked to:</p>
+
+    <ul>
+      <li>Answer a few short questions about your language-learning background, and</li>
+      <li>Judge the acceptability of several English sentences.</li>
+    </ul>
+
+    <p>The whole test will take about <b>10 minutes</b> to complete.</p>
+
+    <p><b>Benefits and risks:</b><br>
+    Joining this study will not bring you any direct benefits. However, your participation will greatly help us understand how Vietnamese advanced learners perceive English grammar, which may contribute to better language teaching practices in the future.<br>
+    There are no risks or harms in participating. If at any point you feel uncomfortable or tired, you may take a break or stop the survey whenever you wish—without any consequences.</p>
+
+    <p><b>Security and privacy:</b><br>
+    All the information you provide will be kept strictly confidential in accordance with privacy regulations. The collected data will be securely stored and accessible only to authorized members of the research team.<br>
+    If you wish to receive a summary of our research findings, please contact us via the information provided at the end of the survey.</p>
+
+    <p><b>Voluntary participation:</b><br>
+    Your participation is entirely voluntary. You may choose to start, pause, or withdraw from the survey at any time without any pressure or consequences. Whether you decide to take part or not is completely your own choice, and your decision will not affect you in any way.</p>
+
+    <p><b>Inquiries:</b><br>
+    If you have any questions about this research, please contact us using the details provided at the end of the survey.</p>
+
+    <p><b>Consent to participate:</b><br>
+    By checking "I agree," you confirm that you:</p>
+
+    <ul>
+      <li>Understand the purpose and process of this research, and</li>
+      <li>Agree to take part voluntarily.</li>
+    </ul>
+
+    <p>You may withdraw your consent at any time by notifying the research team.</p>
+  </div>
+`;
+
+
+// ──────────────────────────────────────────────────────────────────────────
+// 🙏 TRANG IELTS REJECT (hiển thị khi IELTS dưới ngưỡng)
+// ──────────────────────────────────────────────────────────────────────────
+
+const IELTS_REJECT_HTML = `
+  <div class="survey-card" style="text-align:center;">
+    <p style="font-size:22px; margin-bottom:12px;">🙏</p>
+    <p style="font-size:18px; font-weight:600; color:#1e1b4b; margin-bottom:16px;">Thank you so much for your interest in our study!</p>
+    <p style="font-size:15px; color:#4b5563; line-height:1.8;">
+      We truly appreciate you taking the time to consider participating.
+      Unfortunately, this survey is designed for learners with an IELTS score of 7.0 or above,
+      so we are unable to include your responses at this stage.<br><br>
+      We hope you will have the opportunity to be part of our future research.
+      Wishing you all the best in your English learning journey! 🌟
+    </p>
+  </div>
+`;
+
+
+// ──────────────────────────────────────────────────────────────────────────
+// ❓ TRANG 2: BACKGROUND QUESTIONS (các câu hỏi về ngôn ngữ)
+// ──────────────────────────────────────────────────────────────────────────
+
+const BACKGROUND_QUESTIONS = [
+  {
+    id: "q1",
+    question: "1. What name would you like to use for your survey account?",
+    hint: "(Real name or nickname)"
+  },
+  {
+    id: "q1b",
+    question: "2. What is your age?",
+    hint: "(Please enter a number)"
+  },
+  {
+    id: "q2",
+    question: "3. What is your first language (mother tongue)?",
+    hint: ""
+  },
+  {
+    id: "q3",
+    question: "4. On average, how many hours do you use English a day?",
+    hint: ""
+  },
+  {
+    id: "q4",
+    question: "5. When you were a child, what language did you mainly use with family?",
+    hint: ""
+  },
+  {
+    id: "q5",
+    question: "6. In primary school, what language did you mainly use at school?",
+    hint: ""
+  },
+  {
+    id: "q6",
+    question: "7. In secondary school, what language did you mainly use at school?",
+    hint: ""
+  },
+  {
+    id: "q7",
+    question: "8. In high school, what language did you mainly use at school?",
+    hint: ""
+  },
+  {
+    id: "q9",
+    question: "9. Please list all the locations where you have lived so far.",
+    hint: "(e.g. 1–10 years old: Vietnam | 10–11 years old: Canada · If you have always lived in Vietnam, just write: Vietnam)"
+  }
+];
+
+
+// ──────────────────────────────────────────────────────────────────────────
+// 📖 TRANG 3: JUDGMENT INTRO (giới thiệu phần phán đoán câu)
+// ──────────────────────────────────────────────────────────────────────────
+
+const JUDGMENT_INTRO_HTML = `
+  <div class="section-header">
+    <h1>Part 2: Judgement Test</h1>
+    <p>In this section, you will read several English sentences. Your task is to judge how grammatically acceptable each sentence sounds to you in standard written English.</p>
+    <p>Please rate each sentence using the scale below:</p>
+    <div class="scale-legend">
+      <p><b>1</b> — Completely unacceptable</p>
+      <p><b>2</b> — Mostly unacceptable</p>
+      <p><b>3</b> — Somewhat unacceptable</p>
+      <p><b>4</b> — Uncertain / not sure</p>
+      <p><b>5</b> — Somewhat acceptable</p>
+      <p><b>6</b> — Mostly acceptable</p>
+      <p><b>7</b> — Completely acceptable</p>
+    </div>
+    <p>Please go with your first impression and answer as intuitively as possible.</p>
+    <p style="font-size:15px; color:#374151;">
+      To get familiar with the task, you will first complete <b>5 short practice trials</b> before the actual test begins.
+    </p>
+    <span class="note"><b>Note:</b> You have ${TIMER_SECONDS} seconds to rate each sentence.</span>
+  </div>
+`;
+
+
+// ──────────────────────────────────────────────────────────────────────────
+// 🏋️ PRACTICE SENTENCES (5 câu luyện tập)
+// ──────────────────────────────────────────────────────────────────────────
+
+const PRACTICE_SENTENCES = [
+  "The art tutor promised to prepare the materials before class.",
+  "The debate coach said that the event is successful.",
+  "The boy replied that he couldn't take part in my English course.",
+  "The patient were told to be discharged from hospital.",
+  "The students were required to attend the Mathematics course last week."
+];
+
+
+// ──────────────────────────────────────────────────────────────────────────
+// ✅ TRANG SAU PRACTICE (xong luyện tập, sắp vào bài chính)
+// ──────────────────────────────────────────────────────────────────────────
+
+const PRACTICE_DONE_HTML = `
+  <div class="practice-done-card">
+    <span class="emoji-big">👏</span>
+    <h2>Good job! Now let's start giving ratings!</h2>
+    <p>
+      You have completed the practice examples.
+      The actual test will now begin.<br>
+      Remember: go with your first impression and answer within <b>${TIMER_SECONDS} seconds</b>.
+    </p>
+  </div>
+`;
+
+
+// ──────────────────────────────────────────────────────────────────────────
+// 🎲 CONDITIONS — 8 loại câu (KHÔNG NÊN ĐỔI vì gắn với target sentences)
+// ──────────────────────────────────────────────────────────────────────────
+
+const CONDITIONS = [
+  { name: "SsingXVsing",      grammaticality: "grammatical"   },
+  { name: "SsingXVplu",       grammaticality: "ungrammatical" },
+  { name: "SsingphraseVsing", grammaticality: "grammatical"   },
+  { name: "SsingphraseVplu",  grammaticality: "ungrammatical" },
+  { name: "SpluXVsing",       grammaticality: "ungrammatical" },
+  { name: "SpluXVplu",        grammaticality: "grammatical"   },
+  { name: "SpluphraseVsing",  grammaticality: "ungrammatical" },
+  { name: "SpluphraseVplu",   grammaticality: "grammatical"   }
+];
+
+
+// ──────────────────────────────────────────────────────────────────────────
+// 🎯 TARGET SENTENCES — 8 sets × 8 câu (mỗi participant chỉ thấy 1 set)
+//
+// Mỗi set có 8 câu, theo đúng thứ tự CONDITIONS ở trên.
+// Đừng đảo thứ tự câu trong set vì index sẽ map sai condition.
+// ──────────────────────────────────────────────────────────────────────────
+
+const TARGET_SETS = [
+  // ─── Set 1 ───
+  [
+    "The boy eats cookies every afternoon.",
+    "The lady wear a red dress every Monday.",
+    "The man on the second floor usually cooks dinner at 6 p.m.",
+    "The girl at the art class always submit her drawings before 9.",
+    "The neighbors holds parties every weekend.",
+    "The babies drink milk every morning.",
+    "The kids in my neighborhood plays football after school.",
+    "The toddlers in the kindergarten usually have lunch at 11 a.m."
+  ],
+  // ─── Set 2 ───
+  [
+    "The lady wears a red dress every Monday.",
+    "The man usually cook dinner at 6 p.m.",
+    "The girl at the art class always submits her drawings before 9.",
+    "The woman next door hold parties every weekend.",
+    "The babies drinks milk every morning.",
+    "The kids play football after school.",
+    "The toddlers in the kindergarten usually has lunch at 11 a.m.",
+    "The boys in my class eat cookies every afternoon."
+  ],
+  // ─── Set 3 ───
+  [
+    "The man usually cooks dinner at 6 p.m.",
+    "The girl always submit her drawings before 9.",
+    "The woman next door holds parties every weekend.",
+    "The baby in the bedroom drink milk every morning.",
+    "The kids plays football after school.",
+    "The toddlers usually have lunch at 11 a.m.",
+    "The boys in my class eats cookies every afternoon.",
+    "The ladies at the coffee shop wear red dresses every Monday."
+  ],
+  // ─── Set 4 ───
+  [
+    "The girl always submits her drawings before 9.",
+    "The neighbor hold parties every weekend.",
+    "The baby in the bedroom drinks milk every morning.",
+    "The kid in my neighborhood play football after school.",
+    "The toddlers usually has lunch at 11 a.m.",
+    "The boys eat cookies every afternoon.",
+    "The ladies at the coffee shop wears red dresses every Monday.",
+    "The men on the second floor usually cook dinner at 6 p.m."
+  ],
+  // ─── Set 5 ───
+  [
+    "The neighbor holds parties every weekend.",
+    "The baby drink milk every morning.",
+    "The kid in my neighborhood plays football after school.",
+    "The toddler in the kindergarten usually have lunch at 11 a.m.",
+    "The boys eats cookies every afternoon.",
+    "The ladies wear red dresses every Monday.",
+    "The men on the second floor usually cooks dinner at 6 p.m.",
+    "The girls at the art class always submit their drawings before 9."
+  ],
+  // ─── Set 6 ───
+  [
+    "The baby drinks milk every morning.",
+    "The kid play football after school.",
+    "The toddler in the kindergarten usually has lunch at 11 a.m.",
+    "The boy in my class eat cookies every afternoon.",
+    "The ladies wears red dresses every Monday.",
+    "The men usually cook dinner at 6 p.m.",
+    "The girls at the art class always submits their drawings before 9.",
+    "The women next door hold parties every weekend."
+  ],
+  // ─── Set 7 ───
+  [
+    "The kid plays football after school.",
+    "The toddler usually have lunch at 11 a.m.",
+    "The boy in my class eats cookies every afternoon.",
+    "The lady at the coffee shop wear a red dress every Monday.",
+    "The men usually cooks dinner at 6 p.m.",
+    "The girls always submit their drawings before 9.",
+    "The women next door holds parties every weekend.",
+    "The babies in the bedroom drink milk every morning."
+  ],
+  // ─── Set 8 ───
+  [
+    "The toddler usually has lunch at 11 a.m.",
+    "The boy eat cookies every afternoon.",
+    "The lady at the coffee shop wears a red dress every Monday.",
+    "The man on the second floor usually cook dinner at 6 p.m.",
+    "The girls always submits their drawings before 9.",
+    "The neighbors hold parties every weekend.",
+    "The babies in the bedroom drinks milk every morning.",
+    "The kids in my neighborhood play football after school."
+  ]
+];
+
+
+// ──────────────────────────────────────────────────────────────────────────
+// 🃏 FILLER SENTENCES (16 câu xen kẽ giữa các target)
+// ──────────────────────────────────────────────────────────────────────────
+
+const FILLERS = [
+  { id: "filler_01", sentence: "The boy didn't mind talking to strangers yesterday." },
+  { id: "filler_02", sentence: "The singer considered to take part in an international competition last month." },
+  { id: "filler_03", sentence: "The experienced nurse was asked to instruct the junior in nursing techniques 2 days ago." },
+  { id: "filler_04", sentence: "The exam supervisor will informed about the results tomorrow." },
+  { id: "filler_05", sentence: "The language instructor said that the course was effective." },
+  { id: "filler_06", sentence: "The guide informed us that the museum have opened." },
+  { id: "filler_07", sentence: "If the man finishes the project, his boss will be very happy." },
+  { id: "filler_08", sentence: "If I will meet her tomorrow, I will tell her the news." },
+  { id: "filler_09", sentence: "The man who bought this car is a car dealer." },
+  { id: "filler_10", sentence: "What did you see the man who bought ?" },
+  { id: "filler_11", sentence: "Girl as cat pretty irritating in the garden." },
+  { id: "filler_12", sentence: "The lady got the mechanic to fix her car yesterday." },
+  { id: "filler_13", sentence: "The lady got the mechanic fix her car yesterday." },
+  { id: "filler_14", sentence: "The boy was tall enough to reach the shelf." },
+  { id: "filler_15", sentence: "The boy was enough tall to reach the shelf." },
+  { id: "filler_16", sentence: "The lady had better not use mobile phones during the workshop." }
+];
+
+
+// ──────────────────────────────────────────────────────────────────────────
+// 🎉 TRANG KẾT THÚC (sau khi xong toàn bộ survey)
+// ──────────────────────────────────────────────────────────────────────────
+
+const ENDING_HTML = `
+  <div class="ending-card">
+    <span class="emoji-big">🎉</span>
+    <h1>You've completed the survey!</h1>
+    <p>
+      Thank you so much for your time and thoughtful responses.
+      Your participation means a great deal to us and will contribute directly to our understanding of how Vietnamese learners process English grammar.
+    </p>
+    <p>
+      Once the study is complete, we would love to share our findings with you.
+      If you'd like to receive a summary of the results, feel free to leave your email address below — this is entirely optional.
+    </p>
+  </div>
+`;
+
+
+/* ╔══════════════════════════════════════════════════════════════════════════╗
+   ║                                                                          ║
+   ║   ⚙️  PHẦN LOGIC — KHÔNG CẦN CHỈNH (chỉ developer mới nên sửa)            ║
+   ║                                                                          ║
+   ╚══════════════════════════════════════════════════════════════════════════╝ */
+
+
+// ── Init jsPsych ──
+const jsPsych = initJsPsych({
+  on_finish: function () {
+    // Nếu CHƯA cấu hình DataPipe, fallback: tải CSV về máy participant (chỉ test).
+    // Khi đã cấu hình DataPipe, data đã được save_trial gửi lên cloud rồi.
+    if (!DATAPIPE_EXPERIMENT_ID) {
+      jsPsych.data.get().localSave("csv", "grammar_survey_data.csv");
+    }
+  }
+});
+
+// ── Randomization: chia participant vào 1 trong 8 sets (Latin square) ──
+const group = Math.floor(Math.random() * 8);
+const setNumber = group + 1;
+
+// ── Hàm trộn câu, max 2 target liên tiếp ──
+function shuffleConstrained(targetTrials, fillerTrials) {
+  const t = [...targetTrials].sort(() => Math.random() - 0.5);
+  const f = [...fillerTrials].sort(() => Math.random() - 0.5);
+  const result = [];
+  let ti = 0, fi = 0, consec = 0;
+  while (ti < t.length || fi < f.length) {
+    const canTarget = ti < t.length && consec < 2;
+    const canFiller = fi < f.length;
+    if (canTarget && canFiller) {
+      if (Math.random() < 0.33 || consec >= 2) {
+        result.push(f[fi++]); consec = 0;
+      } else {
+        result.push(t[ti++]); consec++;
+      }
+    } else if (canTarget) {
+      result.push(t[ti++]); consec++;
+    } else {
+      result.push(f[fi++]); consec = 0;
+    }
+  }
+  return result;
+}
+
+// ── Step progress UI ──
+function stepProgress(activeStep) {
+  const steps = ["Consent", "Background", "Judgement", "Finish"];
+  let html = "<div class='step-progress'>";
+  for (let i = 0; i < steps.length; i++) {
+    const circleClass = i < activeStep ? "done" : (i === activeStep ? "active" : "upcoming");
+    const icon = i < activeStep ? "✓" : (i + 1);
+    html += "<div class='step-col'>";
+    html += "<div class='step-circle " + circleClass + "'>" + icon + "</div>";
+    html += "<div class='step-label'>" + steps[i] + "</div>";
+    html += "</div>";
+    if (i < steps.length - 1) {
+      const lineClass = i < activeStep ? "done" : "upcoming";
+      html += "<div class='step-line " + lineClass + "'></div>";
+    }
+  }
+  html += "</div>";
+  return html;
+}
+
+// ── Factory: tạo 1 trial phán đoán câu (10s timer, RT logging) ──
+function makeJudgementTrial(label, sentence, meta, isPractice) {
+  const safeId = label.replace(/[^a-zA-Z0-9_-]/g, "_") + "_" + Math.floor(Math.random() * 100000);
+  const badge = isPractice
+    ? `<span class='practice-badge'>📝 Practice &nbsp;|&nbsp; <span id='cd_${safeId}'>Time remaining: ${TIMER_SECONDS}s</span></span>`
+    : `<span class='timer-badge'><span id='cd_${safeId}'>Time remaining: ${TIMER_SECONDS}s</span></span>`;
+
+  const scaleHtml = `
+    <div class="rating-scale">
+      <div class="scale-anchor">Completely unacceptable</div>
+      <div class="scale-row">
+        ${[1,2,3,4,5,6,7].map(n => `
+          <label class="scale-option" data-val="${n}">
+            <span class="num">${n}</span>
+            <input type="radio" name="rating_${safeId}" value="${n}">
+          </label>
+        `).join("")}
+      </div>
+      <div class="scale-anchor">Completely acceptable</div>
+    </div>
+  `;
+
+  return {
+    type: jsPsychHtmlKeyboardResponse,
+    stimulus: `
+      ${stepProgress(2)}
+      <div style="text-align:center;">${badge}</div>
+      <div class="sentence-display">${sentence}</div>
+      ${scaleHtml}
+      <div id="err_${safeId}" class="error-msg" style="display:none;">Please select a rating!</div>
+      <div style="text-align:center;">
+        <button id="next_${safeId}" class="app-btn">Next</button>
+      </div>
+    `,
+    choices: "NO_KEYS",
+    trial_duration: TIMER_SECONDS * 1000,
+    data: {
+      task: isPractice ? "practice" : "judgement",
+      item_id: meta.item_id,
+      item_label: label,
+      trial_type: meta.trial_type,
+      condition: meta.condition,
+      set_number: meta.set_number,
+      grammaticality: meta.grammaticality,
+      sentence: sentence
+    },
+    on_load: function () {
+      const startPerf = performance.now();
+      const startEpoch = Date.now();
+      const startISO = new Date(startEpoch).toISOString();
+      let firstRating = null;
+      let firstRT = null;
+      let finalRating = null;
+
+      document.querySelectorAll(`input[name="rating_${safeId}"]`).forEach(r => {
+        r.addEventListener("change", function () {
+          finalRating = this.value;
+          if (firstRating === null) {
+            firstRating = this.value;
+            firstRT = performance.now() - startPerf;
+          }
+          document.querySelectorAll(`label.scale-option`).forEach(l => l.classList.remove("selected"));
+          this.closest("label.scale-option")?.classList.add("selected");
+        });
+      });
+
+      let timeLeft = TIMER_SECONDS;
+      const cd = document.getElementById(`cd_${safeId}`);
+      const interval = setInterval(() => {
+        timeLeft--;
+        if (cd) cd.innerText = `Time remaining: ${timeLeft}s`;
+        if (timeLeft <= 0) clearInterval(interval);
+      }, 1000);
+
+      window.__currentTrial = {
+        startPerf, startEpoch, startISO, interval,
+        get firstRating() { return firstRating; },
+        get firstRT() { return firstRT; },
+        get finalRating() { return finalRating; },
+        manualSubmit: false
+      };
+
+      document.getElementById(`next_${safeId}`).addEventListener("click", function () {
+        if (!finalRating) {
+          document.getElementById(`err_${safeId}`).style.display = "inline-block";
+          return;
+        }
+        clearInterval(interval);
+        window.__currentTrial.manualSubmit = true;
+        window.__currentTrial._submitRT = performance.now() - startPerf;
+        window.__currentTrial._finalRating = finalRating;
+        window.__currentTrial._firstRating = firstRating;
+        window.__currentTrial._firstRT = firstRT;
+        jsPsych.finishTrial();
+      });
+    },
+    on_finish: function (data) {
+      const t = window.__currentTrial || {};
+      if (t.interval) clearInterval(t.interval);
+      const fr = t._firstRating ?? t.firstRating;
+      const ff = t._finalRating ?? t.finalRating;
+      const frt = t._firstRT ?? t.firstRT;
+      const submitted = !!t.manualSubmit;
+      data.trial_start_epoch_ms = t.startEpoch ?? "NA";
+      data.trial_start_iso = t.startISO ?? "NA";
+      data.rating_first_value = fr ?? "NA";
+      data.rating_final_value = ff ?? "NA";
+      data.rating_rt_ms = frt != null ? Math.round(frt) : "NA";
+      data.rating_rt_sec = frt != null ? (frt / 1000).toFixed(3) : "NA";
+      data.time_limit_sec = TIMER_SECONDS.toFixed(3);
+      data.time_left_after_rating_sec = frt != null ? Math.max(0, TIMER_SECONDS - frt / 1000).toFixed(3) : "0.000";
+      data.submit_rt_ms = submitted ? Math.round(t._submitRT) : "NA";
+      data.submit_rt_sec = submitted ? (t._submitRT / 1000).toFixed(3) : "NA";
+      if (submitted) data.response_status = "submitted";
+      else if (fr != null) data.response_status = "timed_out_after_rating";
+      else data.response_status = "timed_out_no_rating";
+      data.participant_set = setNumber;
+      data.participant_group = group;
+    }
+  };
+}
+
+// ── Trial: Consent ──
+const consent_trial = {
+  type: jsPsychHtmlKeyboardResponse,
+  stimulus: `
+    ${stepProgress(0)}
+    ${CONSENT_HTML}
+    <div class="consent-choice">
+      <label><input type="radio" name="consent" value="agree"> I agree</label>
+      <label><input type="radio" name="consent" value="decline"> I do not agree</label>
+    </div>
+    <div style="text-align:center;">
+      <button id="consent_btn" class="app-btn" disabled>Start Survey</button>
+    </div>
+  `,
+  choices: "NO_KEYS",
+  data: { task: "consent" },
+  on_load: function () {
+    const btn = document.getElementById("consent_btn");
+    document.querySelectorAll('input[name="consent"]').forEach(r => {
+      r.addEventListener("change", function () {
+        btn.disabled = false;
+        btn.dataset.choice = this.value;
+      });
+    });
+    btn.addEventListener("click", function () {
+      window.__consentChoice = btn.dataset.choice;
+      jsPsych.finishTrial();
+    });
+  },
+  on_finish: function (data) {
+    data.consent_choice = window.__consentChoice || "no_response";
+    if (data.consent_choice !== "agree") {
+      jsPsych.endExperiment(`
+        <div class="survey-card" style="text-align:center;">
+          <p style="font-size:18px;">Thank you. The survey has been closed.</p>
+        </div>
+      `);
+    }
+  }
+};
+
+// ── Trial: Background intro ──
+const background_intro = {
+  type: jsPsychHtmlButtonResponse,
+  stimulus: `
+    ${stepProgress(1)}
+    <div class="section-header">
+      <h1>Part 1: Personal Language Learning Background</h1>
+    </div>
+  `,
+  choices: ["Next"],
+  data: { task: "background_intro" }
+};
+
+// ── Trial: IELTS check ──
+const ielts_check = {
+  type: jsPsychHtmlKeyboardResponse,
+  stimulus: `
+    ${stepProgress(1)}
+    <div class="ielts-card">
+      <h3>What's your IELTS score?</h3>
+      <div class="ielts-options">
+        ${IELTS_SCORE_OPTIONS.map(s =>
+          `<label><input type="radio" name="ielts" value="${s}"> ${s}</label>`
+        ).join("")}
+      </div>
+      <div style="text-align:center;">
+        <button id="ielts_btn" class="app-btn" disabled>Continue</button>
+      </div>
+    </div>
+  `,
+  choices: "NO_KEYS",
+  data: { task: "ielts_check" },
+  on_load: function () {
+    const btn = document.getElementById("ielts_btn");
+    document.querySelectorAll('input[name="ielts"]').forEach(r => {
+      r.addEventListener("change", function () {
+        btn.disabled = false;
+        window.__ieltsChoice = this.value;
+      });
+    });
+    btn.addEventListener("click", () => jsPsych.finishTrial());
+  },
+  on_finish: function (data) {
+    data.ielts_score = window.__ieltsChoice || "no_response";
+    if (IELTS_REJECT_SCORES.includes(data.ielts_score)) {
+      jsPsych.endExperiment(IELTS_REJECT_HTML);
+    }
+  }
+};
+
+// ── Trials: Background questions ──
+const bg_questions = BACKGROUND_QUESTIONS.map(q => ({
+  type: jsPsychSurveyText,
+  preamble: `
+    ${stepProgress(1)}
+    <div class="question-card">
+      <span class="q-label">${q.question}</span><br>
+      <span class="q-hint">${q.hint || ""}</span>
+    </div>
+  `,
+  questions: [{ prompt: "", name: q.id, required: true, placeholder: "Type your answer..." }],
+  button_label: "Next",
+  data: { task: "background_question", item_id: q.id }
+}));
+
+// ── Trial: Judgment intro ──
+const judgment_intro = {
+  type: jsPsychHtmlButtonResponse,
+  stimulus: `
+    ${stepProgress(2)}
+    ${JUDGMENT_INTRO_HTML}
+  `,
+  choices: ["Start Examples"],
+  data: { task: "judgment_intro" }
+};
+
+// ── Trials: Practice ──
+const practice_trials = PRACTICE_SENTENCES.map((s, i) => makeJudgementTrial(
+  "practice_trials",
+  s,
+  {
+    item_id: "practice_" + String(i + 1).padStart(2, "0"),
+    trial_type: "practice",
+    condition: "NA",
+    set_number: "NA",
+    grammaticality: "NA"
+  },
+  true
+));
+
+// ── Trial: Practice done ──
+const practice_done = {
+  type: jsPsychHtmlButtonResponse,
+  stimulus: `
+    ${stepProgress(2)}
+    ${PRACTICE_DONE_HTML}
+  `,
+  choices: ["Begin Test"],
+  data: { task: "practice_done" }
+};
+
+// ── Trials: Target + Filler (shuffled with constraint) ──
+const target_trials = TARGET_SETS[group].map((sentence, i) => {
+  const cond = CONDITIONS[i];
+  const trialLabel = "target_" + cond.name + "_set" + setNumber + "_" + cond.grammaticality;
+  return makeJudgementTrial(trialLabel, sentence, {
+    item_id: trialLabel,
+    trial_type: "target",
+    condition: cond.name,
+    set_number: "set" + setNumber,
+    grammaticality: cond.grammaticality
+  }, false);
+});
+
+const filler_trials = FILLERS.map(f => makeJudgementTrial(
+  f.id, f.sentence,
+  { item_id: f.id, trial_type: "filler", condition: "NA", set_number: "NA", grammaticality: "NA" },
+  false
+));
+
+const main_trials = shuffleConstrained(target_trials, filler_trials);
+
+// ── Trial: Ending ──
+const thanks_trial = {
+  type: jsPsychSurveyText,
+  preamble: `
+    ${stepProgress(3)}
+    ${ENDING_HTML}
+  `,
+  questions: [{
+    prompt: "Your email address (optional)",
+    name: "email",
+    required: false,
+    placeholder: "your.email@example.com"
+  }],
+  button_label: "Finish & Submit",
+  data: { task: "thanks" }
+};
+
+// ── Save data trial (chỉ chạy khi DATAPIPE_EXPERIMENT_ID đã cấu hình) ──
+const save_trial = {
+  type: jsPsychPipe,
+  action: "save",
+  experiment_id: DATAPIPE_EXPERIMENT_ID,
+  filename: () => `${jsPsych.randomization.randomID(10)}.csv`,
+  data_string: () => jsPsych.data.get().csv()
+};
+
+// ── Final confirmation sau khi save xong ──
+const final_confirm = {
+  type: jsPsychHtmlButtonResponse,
+  stimulus: `
+    <div class="ending-card">
+      <span class="emoji-big">✅</span>
+      <h1>Your responses have been recorded!</h1>
+      <p>You may now close this tab. Thank you again for your participation.</p>
+    </div>
+  `,
+  choices: ["Close"],
+  data: { task: "final_confirm" }
+};
+
+// ── Build timeline + run ──
+const timeline = [
+  consent_trial,
+  background_intro,
+  ielts_check,
+  ...bg_questions,
+  judgment_intro,
+  ...practice_trials,
+  practice_done,
+  ...main_trials,
+  thanks_trial,
+  // save_trial chỉ chạy nếu DataPipe đã setup
+  ...(DATAPIPE_EXPERIMENT_ID ? [save_trial] : []),
+  final_confirm
+];
+
+jsPsych.run(timeline);
+</script>
+</html>
