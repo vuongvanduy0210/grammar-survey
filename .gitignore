@@ -1,0 +1,12 @@
+.DS_Store
+.claude/
+*.backup-*
+*.local-backup
+node_modules/
+
+# Old PCIbex version (kept locally for reference, not pushed)
+Consent form +  PCIbex Farm (1).txt
+
+# Internal notes / scratch files
+UI_EDITING_RULES.md
+test_minimal.js
